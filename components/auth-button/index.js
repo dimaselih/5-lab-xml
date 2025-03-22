@@ -4,9 +4,52 @@ export class AuthButtonComponent {
     }
 
     getHTML() {
+    //     return `
+    //         <div>
+    //             <script src="https://unpkg.com/@vkid/sdk@<3.0.0/dist-sdk/umd/index.js"></script>
+    //             <script type="text/javascript">
+    //                 if ('VKIDSDK' in window) {
+    //                 const VKID = window.VKIDSDK;
+
+    //                 VKID.Config.init({
+    //                     app: 53163557,
+    //                     redirectUrl: 'http://localhost',
+    //                     responseMode: VKID.ConfigResponseMode.Callback,
+    //                     source: VKID.ConfigSource.LOWCODE,
+    //                     scope: '', // Заполните нужными доступами по необходимости
+    //                 });
+
+    //                 const oneTap = new VKID.OneTap();
+
+    //                 oneTap.render({
+    //                     container: document.currentScript.parentElement,
+    //                     showAlternativeLogin: true
+    //                 })
+    //                 .on(VKID.WidgetEvents.ERROR, vkidOnError)
+    //                 .on(VKID.OneTapInternalEvents.LOGIN_SUCCESS, function (payload) {
+    //                     const code = payload.code;
+    //                     const deviceId = payload.device_id;
+
+    //                     VKID.Auth.exchangeCode(code, deviceId)
+    //                     .then(vkidOnSuccess)
+    //                     .catch(vkidOnError);
+    //                 });
+                    
+    //                 function vkidOnSuccess(data) {
+    //                     // Обработка полученного результата
+    //                 }
+                    
+    //                 function vkidOnError(error) {
+    //                     // Обработка ошибки
+    //                 }
+    //                 }
+    //             </script>
+    //         </div>
+    //     `;
         return `
-            <div id="auth-button"></div>
-        `;
+                <div id="vkid-auth-container"></div>
+            `;
+
     }
 
       
@@ -14,26 +57,43 @@ export class AuthButtonComponent {
     render() {
         const html = this.getHTML();
         this.parent.insertAdjacentHTML('beforeend', html);
-        const VKID = window.VKIDSDK;
 
-        VKID.Config.init({
-            app: 53163557,
-            redirectUrl: 'http://127.0.0.1:5501/public/'
-        });
 
-        const oneTap = new VKID.OneTap();
-        const container = document.getElementById('auth-button');
+        if ('VKIDSDK' in window) {
+            const VKID = window.VKIDSDK;
 
-        
-          
-
-        if (container) {
-            oneTap.render({
-                container: container,
-                scheme: VKID.Scheme.LIGHT,
-                lang: VKID.Languages.RUS,
-                redirectUrl: 'http://127.0.0.1:5501/public/'
+            VKID.Config.init({
+                app: 53163557,
+                redirectUrl: 'http://localhost',
+                responseMode: VKID.ConfigResponseMode.Callback,
+                source: VKID.ConfigSource.LOWCODE,
+                scope: '', // Заполните нужными доступами по необходимости
             });
-        }
+
+            const oneTap = new VKID.OneTap();
+
+            oneTap.render({
+                container: document.getElementById('vkid-auth-container'),
+
+                showAlternativeLogin: true
+            })
+            .on(VKID.WidgetEvents.ERROR, vkidOnError)
+            .on(VKID.OneTapInternalEvents.LOGIN_SUCCESS, function (payload) {
+                const code = payload.code;
+                const deviceId = payload.device_id;
+
+                VKID.Auth.exchangeCode(code, deviceId)
+                .then(vkidOnSuccess)
+                .catch(vkidOnError);
+            });
+            
+            function vkidOnSuccess(data) {
+                // Обработка полученного результата
+            }
+            
+            function vkidOnError(error) {
+                // Обработка ошибки
+            }
+            }
     }
 }

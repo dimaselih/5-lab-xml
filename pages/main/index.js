@@ -53,8 +53,8 @@ export class MainPage {
         // Добавление кнопки авторизации
         const authButton = new AuthButtonComponent(this.parent);
         authButton.render();
-    
-        this.getData()
+        
+        //this.getData()
     }
     
 }
