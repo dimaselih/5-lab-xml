@@ -2,6 +2,9 @@ import {ProductComponent} from "../../components/product/index.js";
 import {BackButtonComponent} from "../../components/back-button/index.js";
 import {MainPage} from "../main/index.js";
 import {SpanNewComponent} from "../../components/span-new/index.js";
+import { ajax } from "../../modules/ajax.js";
+import { urls } from "../../modules/urls.js";
+
 
 export class ProductPage {
     constructor(parent, id) {

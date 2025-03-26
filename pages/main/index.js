@@ -15,12 +15,15 @@ export class MainPage {
     }
 
     getData() {
-        ajax.post(urls.getGroupMembers(groupId), (data) => {
+        ajax.post(urls.getGroupMembers("bauman_memes"), (data) => {
+            //console.log(data)
+            
             this.renderData(data.response.items)
         })
     }
 
     renderData(items) {
+        
         items.forEach((item) => {
             const productCard = new ProductCardComponent(this.pageRoot)
             productCard.render(item, this.clickCard.bind(this))
@@ -40,7 +43,6 @@ export class MainPage {
     }
     clickCard(e) {
         const cardId = e.target.dataset.id
-
         const productPage = new ProductPage(this.parent, cardId)
         productPage.render()
     }
@@ -52,9 +54,14 @@ export class MainPage {
 
         // Добавление кнопки авторизации
         const authButton = new AuthButtonComponent(this.parent);
+        //authButton.render();
+        if (!authButton.isLoggedIn()) {
         authButton.render();
-        
-        //this.getData()
+        //this.render()
+        }
+        else{
+            this.getData();
+        }
     }
     
 }
